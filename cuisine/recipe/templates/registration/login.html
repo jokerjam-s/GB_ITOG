@@ -1,0 +1,40 @@
+{% extends "recipe/base.html" %}
+
+{% block content %}
+
+{% if form.errors %}
+  <div class="alert alert-danger alert-dismissible">Логин или пароль неверны. Попробуйте еще раз.</div>
+{% endif %}
+
+{% if next %}
+  {% if user.is_authenticated %}
+    <div class="alert alert-info">Your account doesn't have access to this page. To proceed,
+    please login with an account that has access.</div>
+  {% else %}
+    <div class="alert alert-info">Please login to see this page.</div>
+  {% endif %}
+{% endif %}
+
+<form method="post" action="{% url 'login' %}">
+{% csrf_token %}
+
+
+    <div class="mb-2">
+      <label>{{ form.username.label_tag }}</label>
+      <div>{{ form.username }}</div>
+    </div>
+
+    <div class="mb-2">
+      <label>{{ form.password.label_tag }}</label>
+      <div>{{ form.password }}</div>
+    </div>
+
+
+    <input type="submit" value="login" class="btn btn-success" />
+    <input type="hidden" name="next" value="{{ next }}" />
+</form>
+
+{# Assumes you setup the password_reset view in your URLconf #}
+<p><a href="{% url 'password_reset' %}">Забыли пароль?</a></p>
+
+{% endblock %}
